@@ -1,7 +1,7 @@
 import { Card, CardContent, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { getStock } from "../../services/stocks";
+import { getStock, useStock } from "../../services/stocks";
 
 const WatchListItem = ({
   stock,
@@ -14,22 +14,18 @@ const WatchListItem = ({
   const [data, setData] = useState(null);
   const [edgeColor, setEdgeColor] = useState(idleColor);
   const [priceColor, setPriceColor] = useState('#000000');
+  const {data: stockData} = useStock(stock);
 
-  const initData = async () => {
-    const data = await getStock(stock);
-    if (data) {
-      setData(data.stock[0]);
-      if (data.stock[0].percent_change < 0) {
+  useEffect(() => {
+    if (stockData) {
+      setData(stockData.stock[0]);
+      if (stockData.stock[0].percent_change < 0) {
         setPriceColor(redColor);
       } else {
         setPriceColor(greenColor);
       }
     }
-  };
-
-  if (!data) {
-    initData();
-  }
+  }, [stockData]);
 
   const handleMouseEnter = () => {
     setEdgeColor(activeColor);

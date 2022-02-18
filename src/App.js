@@ -6,6 +6,7 @@ import {
   TextField
 } from "@mui/material";
 import { getStock } from "./services/stocks";
+import { QueryClient, QueryClientProvider } from "react-query";
 // components
 import {
   SimpleQuery,
@@ -33,78 +34,82 @@ const App = () => {
     setStocks([])
   };
 
+  const queryClient = new QueryClient();
+
   return (
-    <Grid
-      container
-      spacing={2}
-      sx={{
-        padding: '10px 10px'
-      }}
-    >
-      <Grid item xs={3}>
-        <h1>SimpleQuery</h1>
-        <SimpleQuery />
+    <QueryClientProvider client={queryClient}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          padding: '10px 10px'
+        }}
+      >
+        <Grid item xs={3}>
+          <h1>SimpleQuery</h1>
+          <SimpleQuery />
+        </Grid>
+        <Grid item xs={9}></Grid>
+        
+        <Grid item xs={3}>
+          <h1>WatchList</h1>
+
+          <Box
+            sx={{
+              border: '1px solid #000000',
+              padding: '10px 10px 10px 10px'
+            }}
+          >
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  onChange={handleChange}
+                  placeholder="Symbol"
+                  size="small"
+                  variant="outlined"
+                />
+              </Grid>
+              
+              <Grid item xs={3}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={handleClick}
+                >
+                  Add
+                </Button>
+              </Grid>
+              
+              <Grid item xs={3}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={handleClear}
+                >
+                  Clear
+                </Button>
+              </Grid>
+
+              <Grid item xs={12}>
+                <WatchList 
+                  stocks={stocks}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+        <Grid item xs={9}></Grid>
+
+        <Grid item xs={12}>
+          <h1>StocksDataTable</h1>
+
+          <div style={{ height: 400, width: '100%' }}>
+            <StocksDataTable />
+          </div>
+        </Grid>
       </Grid>
-      <Grid item xs={9}></Grid>
-      
-      <Grid item xs={3}>
-        <h1>WatchList</h1>
-
-        <Box
-          sx={{
-            border: '1px solid #000000',
-            padding: '10px 10px 10px 10px'
-          }}
-        >
-          <Grid container spacing={1}>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                onChange={handleChange}
-                placeholder="Symbol"
-                size="small"
-                variant="outlined"
-              />
-            </Grid>
-            
-            <Grid item xs={3}>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={handleClick}
-              >
-                Add
-              </Button>
-            </Grid>
-            
-            <Grid item xs={3}>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={handleClear}
-              >
-                Clear
-              </Button>
-            </Grid>
-
-            <Grid item xs={12}>
-              <WatchList 
-                stocks={stocks}
-              />
-            </Grid>
-          </Grid>
-        </Box>
-      </Grid>
-      <Grid item xs={9}></Grid>
-
-      <Grid item xs={12}>
-        <h1>StocksDataTable</h1>
-
-        <div style={{ height: 400, width: '100%' }}>
-          <StocksDataTable />
-        </div>
-      </Grid>
-    </Grid>
+    </QueryClientProvider>
   );
 };
 

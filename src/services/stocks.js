@@ -10,3 +10,15 @@ export const getStocks = async () => {
   const response = await backend.post(`/stocks.json`);
   return response.data;
 };
+
+export const useStock = (symbol) => {
+  const result = useQuery(
+    ['stocks', symbol],
+    () => getStock(symbol),
+    {
+      refetchInterval: 10000,
+      refetchIntervalInBackground: true
+    }
+  );
+  return result;
+};
